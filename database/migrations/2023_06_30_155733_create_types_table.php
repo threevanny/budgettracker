@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('about', 255)->nullable();
-            $table->string('nature');
+            $table->boolean('nature')->default(0);
             $table->timestamps();
         });
     }
