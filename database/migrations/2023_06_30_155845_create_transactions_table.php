@@ -15,7 +15,15 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('type_id');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('subcategory_id');
+            $table->decimal('amount', 10, 2);
+            $table->string('about', 255)->nullable();
             $table->timestamps();
+            $table->foreign('type_id')->references('id')->on('types');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('subcategory_id')->references('id')->on('subcategories');
         });
     }
 
@@ -27,5 +35,10 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('transactions');
+    }
+
+    public function after($table)
+    {
+        $table->before('subcategories');
     }
 };

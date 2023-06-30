@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('subcategories', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('category_id');
+            $table->string('name');
+            $table->string('about', 255)->nullable();
             $table->timestamps();
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
@@ -27,5 +31,10 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('subcategories');
+    }
+
+    public function after($table)
+    {
+        $table->before('categories');
     }
 };

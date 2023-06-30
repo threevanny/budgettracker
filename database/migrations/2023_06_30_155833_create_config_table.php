@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('config', function (Blueprint $table) {
             $table->id();
+            $table->decimal('amount', 10, 2);
             $table->timestamps();
         });
     }
