@@ -17,8 +17,16 @@ class TransactionController extends Controller
     public function index()
     {  
         $transactions = Transaction::all()->sortByDesc('created_at');
+        $balance = 0;
+        foreach ($transactions as $transaction) {
+            if ($transaction->type->name == 'Income') {
+                $balance += $transaction->amount;
+            } else {
+                $balance -= $transaction->amount;
+            }
+        }
         $types = Type::all();
-        return view('transaction.index', compact('transactions', 'types'));
+        return view('transaction.index', compact('transactions', 'types', 'balance'));
     }
 
     /**

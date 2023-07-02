@@ -12,7 +12,7 @@
 
         <nav class="navbar is-spaced" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-            <a class="navbar-item" href="#">
+            <a class="navbar-item" href="{{ route('transaction.index') }}">
                 <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
             </a>
         
@@ -31,19 +31,19 @@
                 </span>
                 <span>Home</span>
                 </a>
-                <a class="navbar-item" href="#">
+                <a class="navbar-item" href="javascript:void(0);">
                 <span class="icon is-medium">
                     <i class="fas fa-arrow-down fa-lg"></i>
                 </span>
                 <span>Income</span>
                 </a>
-                <a class="navbar-item" href="#">
+                <a class="navbar-item" href="javascript:void(0);">
                 <span class="icon is-medium">
                     <i class="fas fa-arrow-up fa-lg"></i>
                 </span>
                 <span>Expenses</span>
                 </a>
-                <a class="navbar-item" href="#">
+                <a class="navbar-item" href="{{ route('transaction.summary') }}">
                 <span class="icon is-medium">
                     <i class="fas fa-chart-pie fa-lg"></i>
                 </span>
@@ -106,7 +106,7 @@
                     <div class="field">
                         <label class="label" for="amount">Amount</label>
                         <div class="control">
-                            <input class="input" type="number" name="amount" id="amount" placeholder="9999" required>
+                            <input class="input" type="number" name="amount" id="amount" placeholder="9999.00" step="0.01" required>
                         </div>
                     </div>
                     <div class="field">

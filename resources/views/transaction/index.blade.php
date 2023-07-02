@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container is-fluid">
-    <h1 class="has-text-centered is-size-1">158.000,25</h1>
+    <h1 class="has-text-centered is-size-1">{{ $balance }}</h1>
     <p class="has-text-centered is-size-6">Current Balance</p>
 
     <table class="table mt-5" style="margin: 0 auto;">
