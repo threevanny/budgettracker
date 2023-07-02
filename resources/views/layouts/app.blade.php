@@ -27,9 +27,9 @@
             <div class="navbar-start">
                 <a class="navbar-item" href="{{ route('transaction.index') }}">
                 <span class="icon is-medium">
-                    <i class="fas fa-home fa-lg"></i>
+                    <i class="fas fa-wallet fa-lg"></i>
                 </span>
-                <span>Home</span>
+                <span>Transactions</span>
                 </a>
                 <a class="navbar-item" href="{{ route('transaction.income') }}">
                 <span class="icon is-medium">

@@ -6,6 +6,8 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Requests\TransactionRequest;
 use App\Models\Type;
+use App\Models\Category;
+use App\Models\Subcategory;
 
 class TransactionController extends Controller
 {
@@ -29,6 +31,10 @@ class TransactionController extends Controller
         return view('transaction.index', compact('transactions', 'types', 'balance'));
     }
 
+    public function home(){
+        return redirect()->route('transaction.index');
+    }
+
     public function income()
     {
         $transactions = Transaction::where('type_id', 1001)->get()->sortByDesc('created_at');
@@ -49,6 +55,11 @@ class TransactionController extends Controller
             $expense += $transaction->amount;
         }
         return view('transaction.expense', compact('transactions', 'expense', 'types'));
+    }
+
+    public function summary() {
+        $types = Type::all();
+        return view('transaction.summary', compact('types'));
     }
     
 
@@ -123,5 +134,56 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         //
+    }
+
+    public function getdata(Request $request)
+    {
+        switch ( $request['task'] ){
+            case 'type':
+                $data = Category::where('type_id', $request['id'])->orderBy('name', 'asc')->get();
+                return response()->json(['success' => true, 'data' => $data]);
+                break;
+            case 'category':
+                $data = Subcategory::where('category_id', $request['id'])->orderBy('name', 'asc')->get();
+                return response()->json(['success' => true, 'data' => $data]);
+                break;
+            default:
+                return response()->json(['success' => false, 'data' => []]);
+        }
+    }
+
+
+    public function getdatachart()
+    {
+        $labels = Transaction::selectRaw('DATE_FORMAT(created_at, "%b") as month')
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->pluck('month');
+
+        $income = Transaction::where('type_id', 1001)
+            ->selectRaw('DATE_FORMAT(created_at, "%b") as month')
+            ->selectRaw('SUM(amount) as total')
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->pluck('total');
+
+        $expense = Transaction::where('type_id', 1002)
+            ->selectRaw('DATE_FORMAT(created_at, "%b") as month')
+            ->selectRaw('SUM(amount) as total')
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->pluck('total');
+
+        $balance = $income->map(function ($value, $key) use ($expense) {
+            return $value - $expense[$key];
+        });
+
+        return response()->json([
+            'success' => true,
+            'labels' => $labels,
+            'income' => $income,
+            'expense' => $expense,
+            'balance' => $balance,
+        ], 200);
     }
 }
