@@ -29,6 +29,29 @@ class TransactionController extends Controller
         return view('transaction.index', compact('transactions', 'types', 'balance'));
     }
 
+    public function income()
+    {
+        $transactions = Transaction::where('type_id', 1001)->get()->sortByDesc('created_at');
+        $types = Type::all();
+        $income = 0;
+        foreach ($transactions as $transaction) {
+            $income += $transaction->amount;
+        }
+        return view('transaction.income', compact('transactions', 'income', 'types'));
+    }
+
+    public function expense()
+    {
+        $transactions = Transaction::where('type_id', 1002)->get()->sortByDesc('created_at');
+        $types = Type::all();
+        $expense = 0;
+        foreach ($transactions as $transaction) {
+            $expense += $transaction->amount;
+        }
+        return view('transaction.expense', compact('transactions', 'expense', 'types'));
+    }
+    
+
     /**
      * Show the form for creating a new resource.
      *

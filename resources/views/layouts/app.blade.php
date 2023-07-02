@@ -31,13 +31,13 @@
                 </span>
                 <span>Home</span>
                 </a>
-                <a class="navbar-item" href="javascript:void(0);">
+                <a class="navbar-item" href="{{ route('transaction.income') }}">
                 <span class="icon is-medium">
                     <i class="fas fa-arrow-down fa-lg"></i>
                 </span>
                 <span>Income</span>
                 </a>
-                <a class="navbar-item" href="javascript:void(0);">
+                <a class="navbar-item" href="{{ route('transaction.expense') }}">
                 <span class="icon is-medium">
                     <i class="fas fa-arrow-up fa-lg"></i>
                 </span>

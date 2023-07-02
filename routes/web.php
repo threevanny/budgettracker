@@ -24,6 +24,8 @@ Route::get('/', function () {
 });
 
 Route::resource('transaction', TransactionController::class)->only(['index', 'store']);
+Route::get('transaction/income', [TransactionController::class, 'income'])->name('transaction.income');
+Route::get('transaction/expense', [TransactionController::class, 'expense'])->name('transaction.expense');
 
 Route::get('/summary', function () {
     $types = Type::all();
