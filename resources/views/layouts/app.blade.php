@@ -72,7 +72,7 @@
                         <label class="label" for="type">Income/Expense</label>
                         <div class="control is-expanded">
                             <div class="select is-fullwidth">
-                            <select name="type_id" id="type" onchange="getdata(this);" required>
+                            <select name="type_id" id="type" data-url="{{ route('json.getdata') }}" required>
                                 @if ($types)
                                     <option value="">Choose...</option>
                                     @foreach ($types as $type)
@@ -88,7 +88,7 @@
                         <label class="label" for="category">Category</label>
                         <div class="control is-expanded">
                             <div class="select is-fullwidth">
-                            <select name="category_id" id="category" onchange="getdata(this);" required>
+                            <select name="category_id" id="category" data-url="{{ route('json.getdata') }}" required>
                             </select>
                             </div>
                         </div>
@@ -123,91 +123,7 @@
             </div>
             <button class="modal-close is-large" aria-label="close" id="modal-close"></button>
         </div>
-        <script>
-            const openModalButton = document.getElementById('open-modal');
-            const closeModalButton = document.getElementById('close-modal');
-            const modal = document.getElementById('modal-form');
-            const modalCloseButton = document.getElementById('modal-close');
-
-            // Open the modal when the open modal button is clicked
-            openModalButton.addEventListener('click', () => {
-                modal.classList.add('is-active');
-            });
-
-            // Close the modal when the close modal button is clicked
-            closeModalButton.addEventListener('click', () => {
-                modal.classList.remove('is-active');
-            });
-
-            // Close the modal when the modal background or close button is clicked
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal || event.target === modalCloseButton) {
-                modal.classList.remove('is-active');
-                }
-            });
-
-
-
-            function getdata(element){
-                const element_id = element.id;
-                const id = element.value;
-                const url = "{{ route('json.getdata') }}";
-
-                console.log(element_id, id, url);
-
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                    "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: id,
-                        task: element_id,
-                        _token: "{{ csrf_token() }}",
-                    }),
-                })
-                .then(response => response.json())
-                .then(dataSet => {
-                    if(dataSet.success){
-                        const select = document.getElementById(element_id == 'type' ? 'category' : 'subcategory');
-                        select.innerHTML = '';
-                        select.innerHTML = '<option value="">Choose...</option>';
-                        dataSet.data.forEach(element => {
-                            select.innerHTML += '<option value="'+element.id+'">'+element.name+'</option>';
-                        });
-                    }
-                }).catch(error => {
-                    console.error(error);
-                });
-            }
-
-            // Form submit
-            const form = document.getElementById('form_transaction')
-            form.addEventListener('submit', (event) => {
-                event.preventDefault();
-                const url = form.getAttribute('action');
-                const formData = new FormData(form);
-                const submitButton = document.getElementById('submit-form');
-                submitButton.classList.add('is-loading');
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    },
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(dataSet => {
-                    if(dataSet.success){
-                        submitButton.classList.remove('is-loading');
-                        form.reset();
-                        alert(dataSet.message);
-                    }
-                }).catch(error => {
-                    console.error(error);
-                });
-            });
-
-        </script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
