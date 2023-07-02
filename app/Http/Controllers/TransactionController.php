@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Requests\TransactionRequest;
+use App\Models\Type;
 
 class TransactionController extends Controller
 {
@@ -13,8 +15,10 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {  
+        $transactions = Transaction::all()->sortByDesc('created_at');
+        $types = Type::all();
+        return view('transaction.index', compact('transactions', 'types'));
     }
 
     /**
@@ -33,9 +37,16 @@ class TransactionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TransactionRequest $request)
     {
-        //
+        $data = $request->validated();
+        $transaction = Transaction::create($data);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction saved successfully',
+            'data' => $transaction
+        ]);
     }
 
     /**
