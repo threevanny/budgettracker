@@ -12,6 +12,10 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
+    .postCss(
+        'resources/css/app.css', 'public/css', []
+    ).copyDirectory(
+        'resources/assets/images', 'public/assets/images'
+    ).minify([
+        'public/js/app.js', 'public/css/app.css'
     ]);
