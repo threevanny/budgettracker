@@ -20,7 +20,7 @@ use App\Models\Type;
 */
 
 Route::get('/', [TransactionController::class, 'home'])->name('home');
-Route::resource('transaction', TransactionController::class)->only(['index', 'store']);
+Route::resource('transaction', TransactionController::class)->only(['index', 'store', 'destroy']);
 Route::get('transaction/income', [TransactionController::class, 'income'])->name('transaction.income');
 Route::get('transaction/expense', [TransactionController::class, 'expense'])->name('transaction.expense');
 Route::get('transaction/summary', [TransactionController::class, 'summary'])->name('transaction.summary');

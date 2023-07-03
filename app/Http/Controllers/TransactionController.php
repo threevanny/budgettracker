@@ -18,7 +18,7 @@ class TransactionController extends Controller
      */
     public function index()
     {  
-        $transactions = Transaction::all()->sortByDesc('created_at');
+        $transactions = Transaction::all()->sortByDesc('created_at')->take(8);
         $balance = 0;
         foreach ($transactions as $transaction) {
             if ($transaction->type->name == 'Income') {
@@ -133,7 +133,8 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        Transaction::destroy($transaction->id);
+        return redirect()->back();
     }
 
     public function getdata(Request $request)

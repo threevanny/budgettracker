@@ -49,6 +49,7 @@
 				<label class="label" for="about">About</label>
 				<div class="control">
 					<textarea class="textarea" name="about" id="about" rows="2" maxlength="140" placeholder="Write something..."></textarea>
+					<p class="help has-text-right"><span id="about-length">0</span>/140</>
 				</div>
 			</div>
 
@@ -59,3 +60,12 @@
   	</div>
   <button class="modal-close is-large" aria-label="close" id="modal-close"></button>
 </div>
+
+<script>
+	const about = document.getElementById('about');
+    about.addEventListener('input', () => {
+        const aboutLength = about.value.length;
+        const aboutLengthElement = document.getElementById('about-length');
+        aboutLengthElement.innerText = aboutLength;
+    });
+</script>

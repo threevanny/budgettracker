@@ -18,145 +18,153 @@ __webpack_require__(/*! ./scripts */ "./resources/js/scripts.js");
   \*********************************/
 /***/ (() => {
 
-var openModalButton = document.getElementById('open-modal');
-var closeModalButton = document.getElementById('close-modal');
-var modal = document.getElementById('modal-form');
-var modalCloseButton = document.getElementById('modal-close');
+document.addEventListener('DOMContentLoaded', function () {
+  var openModalButton = document.getElementById('open-modal');
+  var closeModalButton = document.getElementById('close-modal');
+  var modal = document.getElementById('modal-form');
+  var modalCloseButton = document.getElementById('modal-close');
 
-// Open the modal when the open modal button is clicked
-openModalButton.addEventListener('click', function () {
-  modal.classList.add('is-active');
-});
+  // Open the modal when the open modal button is clicked
+  openModalButton.addEventListener('click', function () {
+    modal.classList.add('is-active');
+  });
 
-// Close the modal when the close modal button is clicked
-closeModalButton.addEventListener('click', function () {
-  modal.classList.remove('is-active');
-});
-
-// Close the modal when the modal background or close button is clicked
-modal.addEventListener('click', function (event) {
-  if (event.target === modal || event.target === modalCloseButton) {
+  // Close the modal when the close modal button is clicked
+  closeModalButton.addEventListener('click', function () {
     modal.classList.remove('is-active');
+  });
+
+  // Close the modal when the modal background or close button is clicked
+  modal.addEventListener('click', function (event) {
+    if (event.target === modal || event.target === modalCloseButton) {
+      modal.classList.remove('is-active');
+    }
+  });
+  var typeselect = document.getElementById('type');
+  var categoryselect = document.getElementById('category');
+  typeselect.addEventListener('change', function (_ref) {
+    var target = _ref.target;
+    getdata(target);
+  });
+  categoryselect.addEventListener('change', function (_ref2) {
+    var target = _ref2.target;
+    getdata(target);
+  });
+  function getdata(element) {
+    var element_id = element.id;
+    var id = element.value;
+    var url = element.getAttribute('data-url');
+
+    // getting the token
+    var form = element.closest('form');
+    var csrf = form.querySelector('input[name="_token"]').value;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: id,
+        task: element_id,
+        _token: csrf
+      })
+    }).then(function (response) {
+      return response.json();
+    }).then(function (dataSet) {
+      if (dataSet.success) {
+        var select = document.getElementById(element_id == 'type' ? 'category' : 'subcategory');
+        select.innerHTML = '';
+        select.innerHTML = '<option value="">Choose...</option>';
+        dataSet.data.forEach(function (element) {
+          select.innerHTML += '<option value="' + element.id + '">' + element.name + '</option>';
+        });
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    });
   }
-});
-var typeselect = document.getElementById('type');
-var categoryselect = document.getElementById('category');
-typeselect.addEventListener('change', function (_ref) {
-  var target = _ref.target;
-  getdata(target);
-});
-categoryselect.addEventListener('change', function (_ref2) {
-  var target = _ref2.target;
-  getdata(target);
-});
-function getdata(element) {
-  var element_id = element.id;
-  var id = element.value;
-  var url = element.getAttribute('data-url');
 
-  // getting the token
-  var form = element.closest('form');
-  var csrf = form.querySelector('input[name="_token"]').value;
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      id: id,
-      task: element_id,
-      _token: csrf
-    })
-  }).then(function (response) {
-    return response.json();
-  }).then(function (dataSet) {
-    if (dataSet.success) {
-      var select = document.getElementById(element_id == 'type' ? 'category' : 'subcategory');
-      select.innerHTML = '';
-      select.innerHTML = '<option value="">Choose...</option>';
-      dataSet.data.forEach(function (element) {
-        select.innerHTML += '<option value="' + element.id + '">' + element.name + '</option>';
-      });
-    }
-  })["catch"](function (error) {
-    console.error(error);
+  // Form submit
+  var form = document.getElementById('form_transaction');
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var url = form.getAttribute('action');
+    var formData = new FormData(form);
+    var submitButton = document.getElementById('submit-form');
+    submitButton.classList.add('is-loading');
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRF-TOKEN": formData.get('_token')
+      },
+      body: formData
+    }).then(function (response) {
+      return response.json();
+    }).then(function (dataSet) {
+      if (dataSet.success) {
+        submitButton.classList.remove('is-loading');
+        form.reset();
+        alert(dataSet.message);
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    });
   });
-}
 
-// Form submit
-var form = document.getElementById('form_transaction');
-form.addEventListener('submit', function (event) {
-  event.preventDefault();
-  var url = form.getAttribute('action');
-  var formData = new FormData(form);
-  var submitButton = document.getElementById('submit-form');
-  submitButton.classList.add('is-loading');
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "X-CSRF-TOKEN": formData.get('_token')
-    },
-    body: formData
-  }).then(function (response) {
-    return response.json();
-  }).then(function (dataSet) {
-    if (dataSet.success) {
-      submitButton.classList.remove('is-loading');
-      form.reset();
-      alert(dataSet.message);
-    }
-  })["catch"](function (error) {
-    console.error(error);
-  });
-});
+  //  Chart
 
-//  Chart
-
-function getdatachart(context, url) {
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }).then(function (response) {
-    return response.json();
-  }).then(function (data) {
-    if (data.success) {
-      console.log(data);
-      new Chart(context, {
-        type: 'line',
-        data: {
-          labels: data.labels,
-          datasets: [{
-            label: 'Income',
-            data: data.income,
-            borderWidth: 1
-          }, {
-            label: 'Expense',
-            data: data.expense,
-            borderWidth: 1
-          }, {
-            label: 'Ending Balance',
-            data: data.balance,
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
+  function getdatachart(context, url) {
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (data.success) {
+        console.log(data);
+        new Chart(context, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: 'Income',
+              data: data.income,
+              borderWidth: 1
+            }, {
+              label: 'Expense',
+              data: data.expense,
+              borderWidth: 1
+            }, {
+              label: 'Ending Balance',
+              data: data.balance,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
             }
           }
-        }
-      });
-    }
-  })["catch"](function (error) {
-    console.error(error);
-  });
-}
-var ctx = document.getElementById('chart');
-var url = ctx.getAttribute('data-url');
-getdatachart(ctx, url);
+        });
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  }
+  var ctx = document.getElementById('chart');
+  var url = ctx.getAttribute('data-url');
+  getdatachart(ctx, url);
+
+  // const trigger = document.querySelector('.custom-trigger');
+  // const target = document.querySelector('#custom-table');
+  // trigger.addEventListener('click', function() {
+  //     target.classList.toggle('is-hidden');
+  // });
+});
 
 /***/ }),
 

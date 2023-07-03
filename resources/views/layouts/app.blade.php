@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.min.css') }}">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <title>BudgetTracker: Free Online Money Management</title>
 </head>
     <body>
 
-        <nav class="navbar is-spaced" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-light is-spaced" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
             <a class="navbar-item" href="{{ route('transaction.index') }}">
                 <img src="{{ asset('assets/images/logo.png') }}" width="112" height="28">
@@ -65,6 +65,6 @@
         @include('transaction.modal.create')
         
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="{{ asset('js/app.js') }}"></script>
+        <script defer src="{{ asset('js/app.min.js') }}"></script>
     </body>
 </html>
