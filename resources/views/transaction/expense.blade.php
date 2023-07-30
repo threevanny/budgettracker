@@ -26,7 +26,7 @@
                     <td>
                         <span class="icon-text">
                             <span class="icon has-text-danger">
-                                <i class="fas fa-arrow-down"></i>
+                                <i class="fas fa-arrow-up"></i>
                             </span>
                             <span>{{ $transaction->type->name }}</span>
                         </span>
