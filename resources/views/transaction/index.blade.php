@@ -55,6 +55,13 @@
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6">
+                    {{ $transactions->onEachSide(1)->links('vendor.pagination.bulma') }}
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </div>
 @endsection

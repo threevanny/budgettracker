@@ -2,8 +2,7 @@
 
 @section('content')
 <div class="container is-fluid">
-    <h1 class="has-text-centered is-size-1">{{ $income }}</h1>
-    <p class="has-text-centered has-text-grey-light is-size-6">Current income balance</p>
+    <h1 class="has-text-centered is-size-1">Income</h1>
 
     <table class="table mt-5" style="margin: 0 auto;">
         <thead>
@@ -55,6 +54,13 @@
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                    {{ $transactions->onEachSide(1)->links('vendor.pagination.bulma') }}
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </div>
 <script>

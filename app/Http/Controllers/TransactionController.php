@@ -18,16 +18,9 @@ class TransactionController extends Controller
      */
     public function index()
     {  
-        $transactions = Transaction::all()->sortByDesc('created_at')->take(8);
-        $balance = 0;
-        foreach ($transactions as $transaction) {
-            if ($transaction->type->name == 'Income') {
-                $balance += $transaction->amount;
-            } else {
-                $balance -= $transaction->amount;
-            }
-        }
+        $transactions = Transaction::latest()->paginate(5);
         $types = Type::all();
+        $balance = Transaction::where('type_id', 1001)->sum('amount') - Transaction::where('type_id', 1002)->sum('amount');
         return view('transaction.index', compact('transactions', 'types', 'balance'));
     }
 
@@ -37,24 +30,16 @@ class TransactionController extends Controller
 
     public function income()
     {
-        $transactions = Transaction::where('type_id', 1001)->get()->sortByDesc('created_at');
+        $transactions = Transaction::where('type_id', 1001)->latest()->paginate(5);
         $types = Type::all();
-        $income = 0;
-        foreach ($transactions as $transaction) {
-            $income += $transaction->amount;
-        }
-        return view('transaction.income', compact('transactions', 'income', 'types'));
+        return view('transaction.income', compact('transactions', 'types'));
     }
 
     public function expense()
     {
-        $transactions = Transaction::where('type_id', 1002)->get()->sortByDesc('created_at');
+        $transactions = Transaction::where('type_id', 1002)->latest()->paginate(5);
         $types = Type::all();
-        $expense = 0;
-        foreach ($transactions as $transaction) {
-            $expense += $transaction->amount;
-        }
-        return view('transaction.expense', compact('transactions', 'expense', 'types'));
+        return view('transaction.expense', compact('transactions', 'types'));
     }
 
     public function summary() {
